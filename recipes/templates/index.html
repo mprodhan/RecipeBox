@@ -1,0 +1,12 @@
+<h1>Hello, Tummy!</h1>
+
+<ul>
+    {% for recipe in data %}
+        <li>
+            {{recipe.title}} | by {{recipe.author.name}}
+        </li>
+    {% endfor %}
+
+</ul>
+
+<a href="/recipe/{% url'recipe' %}/">Recipes</a>
