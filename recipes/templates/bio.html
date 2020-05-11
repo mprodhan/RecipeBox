@@ -1,0 +1,17 @@
+<h1>Hello, World</h1>
+<h3>Here is my Bio:</h3>
+
+<p>
+    <p>My name is {{info.name}}</p>
+    {{info.bio}}
+</p>
+
+<ul>
+    {% for r in recipes %}
+        <li>
+            {{r.title}}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="/">Home</a>

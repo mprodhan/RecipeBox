@@ -1,10 +1,12 @@
 <h1>Sabsum Yassum Recipe Box</h1>
 
 <ul>
-    {% for ingredient in recipe%}
-        <li>
-            {{recipe.description}}
-        </li>
-</ul>
+    <li>
+        {{recipe.description}}
+        <a href="/author/{{recipe.id}}/">
+            <p>{{recipe.author}}</p>
+        </a>
+    </li>
+ </ul>
 
-<a href="/index/{{%url'index'%}}/">Go to recipe</a>
+    <a href="/">Home</a>

@@ -4,9 +4,9 @@
     {% for recipe in data %}
         <li>
             {{recipe.title}} | by {{recipe.author.name}}
+            <a href="/recipe/{{recipe.id}}/">Recipes</a>
         </li>
     {% endfor %}
+    
 
 </ul>
-
-<a href="/recipe/{% url'recipe' %}/">Recipes</a>
