@@ -7,7 +7,7 @@ def index(request):
     return render(request, "index.html", {"data": data})
 
 def recipesadd(request):
-    html = "generic_form.html"
+    html = "recipesadd.html"
     if request.method == "POST":
         form = RecipesAddForm(request.POST)
         if form.is_valid():
@@ -22,12 +22,12 @@ def recipesadd(request):
     return render(request, html, {"form": form})
 
 def authoradd(request):
-    html = "generic_form.html"
+    html = "authoradd.html"
     if request.method == "POST":
         form = AuthorAddForm(request.POST)
         form.save()
         return HttpResponseRedirect(reverse("homepage"))
-    form = AuthorAddForm
+    form = AuthorAddForm()
     return render(request, html, {"form": form})
 
 
