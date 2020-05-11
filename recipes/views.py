@@ -1,9 +1,35 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse, HttpResponseRedirect
 from recipes.models import RecipeItem, Author
+from recipes.forms import RecipesAddForm, AuthorAddForm
 
 def index(request):
     data = RecipeItem.objects.all()
     return render(request, "index.html", {"data": data})
+
+def recipesadd(request):
+    html = "generic_form.html"
+    if request.method == "POST":
+        form = RecipesAddForm(request.POST)
+        if form.is_valid():
+            recipe = form.cleaned_data
+            RecipeItem.objects.create(
+                title = recipe['title'],
+                description = recipe['description'],
+                author = recipe['author']
+            )
+            return HttpResponseRedirect(reverse("homepage"))
+    form = RecipesAddForm()
+    return render(request, html, {"form": form})
+
+def authoradd(request):
+    html = "generic_form.html"
+    if request.method == "POST":
+        form = AuthorAddForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse("homepage"))
+    form = AuthorAddForm
+    return render(request, html, {"form": form})
+
 
 def recipe_view(request, id):
     recipe = RecipeItem.objects.get(id=id)
