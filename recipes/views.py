@@ -1,11 +1,29 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
 from recipes.models import RecipeItem, Author
-from recipes.forms import RecipesAddForm, AuthorAddForm
+from recipes.forms import RecipesAddForm, AuthorAddForm, LoginForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout, authenticate
+
+def loginview(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(request, username=data["username"],
+                password=data["password"]
+            )
+            if user:
+                login(request, user)
+                return HttpResponseRedirect(request.GET.get('next', reverse("homepage"))
+                )
+    form = LoginForm()
+    return render(request, "generic_form.html", {"form": form})
 
 def index(request):
     data = RecipeItem.objects.all()
     return render(request, "index.html", {"data": data})
 
+@login_required
 def recipesadd(request):
     html = "recipesadd.html"
     if request.method == "POST":
@@ -21,6 +39,7 @@ def recipesadd(request):
     form = RecipesAddForm()
     return render(request, html, {"form": form})
 
+@login_required
 def authoradd(request):
     html = "authoradd.html"
     if request.method == "POST":
