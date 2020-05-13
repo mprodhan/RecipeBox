@@ -1,8 +1,9 @@
-from django.shortcuts import render, reverse, HttpResponseRedirect
+from django.shortcuts import render, reverse, HttpResponseRedirect, HttpResponse
 from recipes.models import RecipeItem, Author
 from recipes.forms import RecipesAddForm, AuthorAddForm, LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 
 def loginview(request):
     if request.method == "POST":
@@ -19,13 +20,17 @@ def loginview(request):
     form = LoginForm()
     return render(request, "generic_form.html", {"form": form})
 
+def logoutview(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("homepage"))
+
 def index(request):
     data = RecipeItem.objects.all()
     return render(request, "index.html", {"data": data})
 
 @login_required
 def recipesadd(request):
-    html = "recipesadd.html"
+    html = "generic_form.html"
     if request.method == "POST":
         form = RecipesAddForm(request.POST)
         if form.is_valid():
@@ -41,10 +46,15 @@ def recipesadd(request):
 
 @login_required
 def authoradd(request):
-    html = "authoradd.html"
+    html = "generic_form.html"
+    if not request.user.is_staff:
+        return HttpResponse("Sorry buddy Admin only privileges!")
     if request.method == "POST":
         form = AuthorAddForm(request.POST)
-        form.save()
+        new_author = form.save(commit=False)
+        user = User.objects.create_user(username = new_author.name, password = "Bienvenue")
+        new_author.User = user
+        new_author.save()
         return HttpResponseRedirect(reverse("homepage"))
     form = AuthorAddForm()
     return render(request, html, {"form": form})
