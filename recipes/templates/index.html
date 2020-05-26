@@ -1,7 +1,7 @@
 <h1>Hello, Tummy!</h1>
 Are you logged in? {{request.user.is_authenticated}}
 Not logged in? <a href="/login/">Click here to login</a>
-<a href="/logout/">Click here to logout</a>
+<p><a href="/logout/">Click here to logout</a></p>
 
 <ul>
     {% for recipe in data %}
